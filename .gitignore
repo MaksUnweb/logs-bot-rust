@@ -1,0 +1,6 @@
+/target
+/realese
+/db
+.env
+Cargo.lock
+
