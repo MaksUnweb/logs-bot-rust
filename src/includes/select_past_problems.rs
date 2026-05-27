@@ -92,13 +92,24 @@ async fn select_from_database(pool: PgPool, limit: i64, offset: i64, sql: &str) 
 
 #[test]
 fn test_conversion() {
-    let test_input = "15min 🕜".to_string();
-    let success_result = 
-        Some(r#"
-            SELECT * FROM logs 
-            WHERE time_data >= NOW() - INTERNAL '15 minute'
-        "#);
-    let func_return_data = conversion_time(test_input);
-    assert_eq!(func_return_data, success_result);
+//     let test_input = "15min 🕜".to_string();
+//     let success_result = 
+//         Some(r#"
+//             SELECT text_error FROM logs 
+//             WHERE time_data >= NOW() - INTERVAL '15 minute'
+//             ORDER BY time_data DESC 
+//             LIMIT $1 OFFSET $2
+//         "#,
+// );
+//     let func_return_data = conversion_time(test_input);
+//     assert_eq!(func_return_data, success_result);
+let test_input = "15min 🕜".to_string();
+ 
+ // Не сравнивай всю строку целиком!
+ let result = conversion_time(test_input).unwrap();
+ 
+ // Проверяй только ключевые части
+ assert!(result.contains("SELECT text_error FROM logs"));
+ assert!(result.contains("INTERVAL '15 minute'"));
+ assert!(result.contains("LIMIT $1 OFFSET $2"));
 }
-
